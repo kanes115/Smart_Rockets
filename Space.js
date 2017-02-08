@@ -2,21 +2,35 @@ function Space(amountOfShips, xTarget, yTarget){
   this.amountOfShips = amountOfShips;
   this.ships = [];
   this.obstacles = [];
+  this.genreProg = 0;                             //progress on current genre
+  this.target = new Target(width/2, 50, 25);
+  this.genreLen = 200;                            //length of one generation
+
 
   this.createShips = function (){
 
     for(i = 0; i < amountOfShips; i++){
-      this.ships[i] = new SpaceShip(width/2, height, 100000000);
+      this.ships[i] = new SpaceShip(width/2, height, 200);
     }
   }
 
+  this.createShips();                  //zawsze na początku tworzymy statki
+
 
   this.draw = function(){
+    this.target.draw();               //rysujemy target
+
     for(i = 0; i < this.ships.length; i++){
-      //this.ships[i].moveTowards(createVector(randd(0, 500), randd(0,500)));  //createVector(mouseX, mouseY)
       this.ships[i].update();
       this.ships[i].draw();
     }
+    this.genreProg++;                     //każde rysowanie to jedno posunięcie wszytskich statków
+
+    if(this.genreProg == this.genreLen){
+      this.createShips();//tymczasowe
+      this.genreProg = 0;
+    }
+
 
     for(i = 0; i < this.obstacles.length; i++){
       this.obstacles[i].draw();
@@ -35,6 +49,22 @@ function Space(amountOfShips, xTarget, yTarget){
 
       }
     }
+  }
+}
+
+
+
+
+
+
+function Target(x, y, r){
+  this.x = x;
+  this.y = y;
+  this.r = r;
+
+  this.draw = function (){
+    fill(100);
+    ellipse(x, y, r, r);
   }
 }
 
